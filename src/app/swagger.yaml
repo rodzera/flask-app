@@ -1,0 +1,619 @@
+openapi: 3.0.3
+info:
+  title: Flask-App
+  description: developed by @rodzera
+  version: 1.0.0
+servers:
+  - url: /api
+paths:
+  /about:
+    get:
+      tags:
+        - About
+      summary: Retrieve project's about.
+      responses:
+        200:
+          description: Default response for project's about.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  project:
+                    type: string
+                    example: "flask-app"
+                  version:
+                    type: string
+                    example: "1.0.0"
+                  developer:
+                    type: string
+                    example: "github.com/rodzera"
+                  description:
+                    type: string
+                    example: "a flask app template"
+                  technologies:
+                    type: object
+                    properties:
+                      python:
+                        type: string
+                        example: 3.11
+                      frameworks:
+                        type: array
+                        items:
+                          type: string
+                        example: ["flask"]
+                      libraries:
+                        type: array
+                        items:
+                          type: string
+                        example: ["sqlalchemy", "marshmallow", "swagger"]
+        405:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        406:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        500:
+          $ref: "#/components/responses/HTTPErrorResponse"
+  /database:
+    get:
+      tags:
+        - Status
+      summary: Database healthcheck.
+      responses:
+        200:
+          description: Database healthcheck success response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "up"
+                  datetime:
+                    type: string
+                    example: "2023-06-11 18:37:55"
+        405:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        406:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        500:
+          $ref: "#/components/responses/HTTPErrorResponse"
+  /server:
+    get:
+      tags:
+        - Status
+      summary: Server healthcheck.
+      responses:
+        200:
+          description: Server healthcheck success response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "up"
+                  version:
+                    type: string
+                    example: "1.0.0"
+        405:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        406:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        500:
+          $ref: "#/components/responses/HTTPErrorResponse"
+
+  /settings/logs:
+    get:
+      tags:
+        - Settings
+      summary: Retrieve server's logger level.
+      responses:
+        200:
+          description: Server logger level success response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  level:
+                    type: string
+                    example: "INFO"
+        401:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        405:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        406:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        500:
+          $ref: "#/components/responses/HTTPErrorResponse"
+      security:
+        - basic: [ ]
+    put:
+      tags:
+        - Settings
+      summary: Change the server's logger level.
+      requestBody:
+        $ref: "#/components/requestBodies/LoggerLevelPayload"
+      responses:
+        200:
+          description: Server logger level success response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  level:
+                    type: string
+                    example: "INFO"
+        400:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        401:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        405:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        406:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        500:
+          $ref: "#/components/responses/HTTPErrorResponse"
+      security:
+        - basic: [ ]
+
+  /roles:
+    get:
+      tags:
+        - Roles
+      summary: Retrieve several roles.
+      responses:
+        200:
+          description: Default response for several roles.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  rows:
+                    type: integer
+                    example: 1
+                  roles:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/RoleSchema"
+        401:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        405:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        406:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        500:
+          $ref: "#/components/responses/HTTPErrorResponse"
+      security:
+        - basic: [ ]
+    post:
+      tags:
+        - Roles
+      summary: Create a role.
+      requestBody:
+        $ref: "#/components/requestBodies/RolePayload"
+      responses:
+        201:
+          $ref: "#/components/responses/RoleResponse"
+        400:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        401:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        405:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        406:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        500:
+          $ref: "#/components/responses/HTTPErrorResponse"
+      security:
+        - basic: [ ]
+
+  /roles/{role_id}:
+    get:
+      tags:
+        - Roles
+      summary: Retrieve a specified role.
+      parameters:
+        - in: path
+          name: role_id
+          schema:
+            type: integer
+          required: true
+          description: A valid role id
+      responses:
+        200:
+          $ref: "#/components/responses/RoleResponse"
+        401:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        405:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        406:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        500:
+          $ref: "#/components/responses/HTTPErrorResponse"
+      security:
+        - basic: [ ]
+    put:
+      tags:
+        - Roles
+      summary: Update a specified role.
+      parameters:
+        - in: path
+          name: role_id
+          schema:
+            type: integer
+          required: true
+          description: A valid role id
+      requestBody:
+        $ref: "#/components/requestBodies/RolePayload"
+      responses:
+        200:
+          $ref: "#/components/responses/RoleResponse"
+        400:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        401:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        405:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        406:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        500:
+          $ref: "#/components/responses/HTTPErrorResponse"
+      security:
+        - basic: [ ]
+    delete:
+      tags:
+        - Roles
+      summary: Delete a specified role.
+      parameters:
+        - in: path
+          name: role_id
+          schema:
+            type: integer
+          required: true
+          description: A valid role id
+      responses:
+        204:
+          $ref: "#/components/responses/NoContentResponse"
+        401:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        404:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        405:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        406:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        500:
+          $ref: "#/components/responses/HTTPErrorResponse"
+      security:
+        - basic: [ ]
+
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Retrieve several users.
+      responses:
+        200:
+          description: Default response for several users.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  rows:
+                    type: integer
+                    example: 1
+                  users:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/UserSchema"
+        401:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        405:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        406:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        500:
+          $ref: "#/components/responses/HTTPErrorResponse"
+      security:
+        - basic: [ ]
+    post:
+      tags:
+        - Users
+      summary: Create a role.
+      requestBody:
+        $ref: "#/components/requestBodies/UserPayload"
+      responses:
+        201:
+          $ref: "#/components/responses/UserResponse"
+        400:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        401:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        405:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        406:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        500:
+          $ref: "#/components/responses/HTTPErrorResponse"
+      security:
+        - basic: [ ]
+
+  /users/{user_id}:
+    get:
+      tags:
+        - Users
+      summary: Retrieve a specified user.
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: integer
+          required: true
+          description: A valid user id
+      responses:
+        200:
+          $ref: "#/components/responses/UserResponse"
+        401:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        405:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        406:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        500:
+          $ref: "#/components/responses/HTTPErrorResponse"
+      security:
+        - basic: [ ]
+    put:
+      tags:
+        - Users
+      summary: Update a specified user.
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: integer
+          required: true
+          description: A valid user id
+      requestBody:
+        $ref: "#/components/requestBodies/UserPayload"
+      responses:
+        200:
+          $ref: "#/components/responses/UserResponse"
+        400:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        401:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        405:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        406:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        500:
+          $ref: "#/components/responses/HTTPErrorResponse"
+      security:
+        - basic: [ ]
+    delete:
+      tags:
+        - Users
+      summary: Delete a specified user.
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: integer
+          required: true
+          description: A valid user id
+      responses:
+        204:
+          $ref: "#/components/responses/NoContentResponse"
+        401:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        404:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        405:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        406:
+          $ref: "#/components/responses/HTTPErrorResponse"
+        500:
+          $ref: "#/components/responses/HTTPErrorResponse"
+      security:
+        - basic: [ ]
+
+components:
+  schemas:
+    RoleSchema:
+      description: Role response schema.
+      type: object
+      required:
+        - id
+        - name
+        - users
+      properties:
+        id:
+          description: Role ID.
+          type: integer
+          format: int64
+          example: 1
+        name:
+          description: Role name.
+          type: string
+          example: users
+        users:
+          description: Users linked with role.
+          type: array
+          example: ["1", "2"]
+    UserSchema:
+      description: User response schema.
+      type: object
+      required:
+        - id
+        - username
+        - roles
+      properties:
+        id:
+          description: User ID.
+          type: integer
+          format: int64
+          example: 1
+        username:
+          description: Username.
+          type: string
+          example: username
+        roles:
+          description: Roles linked with user.
+          type: array
+          example: ["1", "2"]
+    SuccessResponse:
+      description: The default success message schema.
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          description: The success message.
+          type: string
+          example: success
+    ErrorSchema:
+      description: The default error message schema.
+      type: object
+      required:
+        - status_code
+        - name
+        - message
+      properties:
+        status_code:
+          description: The HTTP status code.
+          type: integer
+          format: int64
+        name:
+          description: The HTTP status code name.
+          type: string
+        message:
+          description: The error message.
+          type: string
+    NoContent:
+      description: Response message with no content
+      type: object
+      nullable: true
+
+  requestBodies:
+    RolePayload:
+      description: Role payload schema.
+      required: true
+      content:
+        application/json:
+          schema:
+            properties:
+              name:
+                description: Role name.
+                type: string
+              users:
+                description: Users linked with role.
+                type: array
+          examples:
+            role:
+              summary: role
+              value:
+                name: users
+                users: ["1", "2"]
+    UserPayload:
+      description: User payload schema.
+      required: true
+      content:
+        application/json:
+          schema:
+            properties:
+              username:
+                description: Username.
+                type: string
+              password:
+                description: Password.
+                type: string
+              roles:
+                description: Roles linked with user.
+                type: array
+          examples:
+            user:
+              summary: user
+              value:
+                username: username
+                password: password
+                roles: ["1", "2"]
+    LoggerLevelPayload:
+      description: Log level payload schema.
+      required: true
+      content:
+        application/json:
+          schema:
+            properties:
+              level:
+                description: The logger level to be set.
+                type: string
+          examples:
+            info:
+              summary: INFO
+              value:
+                level: INFO
+            debug:
+              summary: DEBUG
+              value:
+                level: DEBUG
+            warning:
+              summary: WARNING
+              value:
+                level: WARNING
+            error:
+              summary: ERROR
+              value:
+                level: ERROR
+            critical:
+              summary: CRITICAL
+              value:
+                level: CRITICAL
+
+  responses:
+    RoleResponse:
+      description: Default role response.
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/RoleSchema"
+    UserResponse:
+      description: Default user response.
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/UserSchema"
+    SuccessResponse:
+      description: Default response for 200 status code.
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/SuccessResponse"
+    NoContentResponse:
+      description: Default response for 204 status code.
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/NoContent"
+    HTTPErrorResponse:
+      description: Default response for a HTTP error.
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/ErrorSchema"
+  securitySchemes:
+    basic:
+      type: http
+      scheme: basic
+      description: Basic HTTP authorization
