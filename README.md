@@ -1,4 +1,5 @@
 # Flask-App
+[![Test and Build](https://github.com/rodzera/flask-app/actions/workflows/test_and_build.yml/badge.svg?branch=master)](https://github.com/rodzera/flask-app/actions/workflows/test_and_build.yml)
 
 A flask app template. Feel free to use or modify :)
 
