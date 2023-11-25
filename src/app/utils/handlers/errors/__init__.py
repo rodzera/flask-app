@@ -16,7 +16,7 @@ def handle_any_error(e):
     data = dict(status_code=e.code, name=e.name, message=e.description)
     log.error(f"Error handled. Returning Response: {data}")
     response.data = json.dumps(data)
-    response.content_type = "application/json"
+    response.mimetype = "application/json"
     return response
 
 

@@ -11,7 +11,7 @@ from src.app.utils import log_json_after_request
 log = get_logger(__name__)
 
 
-def create_app():
+def create_app() -> Flask:
     app = Flask(__name__)
 
     log.info("Initializing migrations")

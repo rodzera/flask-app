@@ -1,9 +1,11 @@
+from typing import Tuple, Union
+
 from src.app.logger import get_logger
 
 log = get_logger(__name__)
 
 
-def query_with_entities(model, *attrs, **kattrs):
+def query_with_entities(model, *attrs, **kattrs) -> Union[Tuple, bool]:
     """
     Query a given model using the "with_entities" and "filter_by" functions.
 

@@ -1,7 +1,20 @@
 # Flask-App
-[![Test and Build](https://github.com/rodzera/flask-app/actions/workflows/test_and_build.yml/badge.svg?branch=master)](https://github.com/rodzera/flask-app/actions/workflows/test_and_build.yml)
+[![Test and Build](https://github.com/rodzera/flask-app/actions/workflows/test_and_build.yml/badge.svg?branch=master)](https://github.com/rodzera/flask-app/actions/workflows/test_and_build.yml) [![Python 3.11](https://img.shields.io/badge/python-3.11.x-blue.svg)](https://www.python.org/downloads/release/python-3111/) [![flask](https://img.shields.io/badge/flask-3.0.x-blue.svg)](https://flask.palletsprojects.com/en/3.0.x/)
 
-A flask app template. Feel free to use or modify :)
+A flask app structure with the following features:
+
+- restful api with [marshmallow](https://flask-marshmallow.readthedocs.io/en/latest/) validation;
+- users and roles [sqlalchemy](https://flask-sqlalchemy.palletsprojects.com/en/3.1.x/) models;
+- [mysql](https://hub.docker.com/_/mysql) and [postgres](https://hub.docker.com/_/postgres) support;
+- [migrations](https://flask-migrate.readthedocs.io/en/latest/) versioning;
+- runtime [logging](https://docs.python.org/3.11/library/logging);
+- [unit tests](https://docs.pytest.org/en/7.4.x/);
+- [swagger](https://github.com/flasgger/flasgger) documentation;
+- [docker hub](https://docs.docker.com/docker-hub/) deployment;
+- ci/cd pipelines with [github actions](https://docs.github.com/en/actions);
+- production-ready [docker compose](https://docs.docker.com/compose/) setup with [gunicorn](https://gunicorn.org/);
+
+Feel free to use or modify this project :)
 
 ```json
  {
@@ -27,7 +40,7 @@ A flask app template. Feel free to use or modify :)
             "postgres"
         ],
         "tests": [
-            "unittests"
+            "pytest"
         ],
         "ci/cd": [
             "github actions"
@@ -74,6 +87,13 @@ docker run -dit \
 -e POSTGRES_PASSWORD=admin \
 postgres:latest
 ```
+
+## Migrations
+
+Before starting the application it is essential to upgrade the database to the latest migration version and populate it with the default user/admin roles.
+
+- Upgrade database: `flask db upgrade`
+- Populate database: `flask populate_database`
 
 ## Running
 
