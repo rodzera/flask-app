@@ -7,8 +7,8 @@ log = get_logger(__name__)
 
 
 def register_cli_commands(app: Flask):
-    @app.cli.command(name="populates_roles", help="Populates database with default roles.")
-    def populates_roles():
+    @app.cli.command(name="populate_roles", help="This function populates the database with default roles.")
+    def populate_roles():
         for role in ["admin", "user"]:
             if Role.query.filter_by(name=role).first() is None:
                 log.info(f"Creating role {role}")

@@ -3,58 +3,22 @@
 
 A flask app structure with the following features:
 
-- restful api with [marshmallow](https://flask-marshmallow.readthedocs.io/en/latest/) validation;
-- users and roles [sqlalchemy](https://flask-sqlalchemy.palletsprojects.com/en/3.1.x/) models;
-- [mysql](https://hub.docker.com/_/mysql) and [postgres](https://hub.docker.com/_/postgres) support;
-- [migrations](https://flask-migrate.readthedocs.io/en/latest/) versioning;
-- runtime [logging](https://docs.python.org/3.11/library/logging);
-- [unit tests](https://docs.pytest.org/en/7.4.x/);
-- [swagger](https://github.com/flasgger/flasgger) documentation;
-- [docker hub](https://docs.docker.com/docker-hub/) deployment;
-- ci/cd pipelines with [github actions](https://docs.github.com/en/actions);
-- production-ready [docker compose](https://docs.docker.com/compose/) setup with [gunicorn](https://gunicorn.org/);
+- RESTful API with [marshmallow](https://flask-marshmallow.readthedocs.io/en/latest/) validation
+- Users and roles [SQLAlchemy](https://flask-sqlalchemy.palletsprojects.com/en/3.1.x/) models
+- [PostgreSQL](https://hub.docker.com/_/postgres) and [MySQL](https://hub.docker.com/_/mysql) support
+- [Migrations](https://flask-migrate.readthedocs.io/en/latest/) versioning
+- Runtime [logging](https://docs.python.org/3.11/library/logging)
+- Unittests with [Pytest](https://docs.pytest.org/en/7.4.x/)
+- [Swagger](https://github.com/flasgger/flasgger) documentation
+- [Docker Hub](https://docs.docker.com/docker-hub/) deployment
+- CI/CD pipelines with [GitHub Actions](https://docs.github.com/en/actions)
+- Production-ready [Docker Compose](https://docs.docker.com/compose/) setup with [Gunicorn](https://gunicorn.org/)
 
-Feel free to use or modify this project :)
-
-```json
- {
-    "name": "flask-app",
-    "version":  "1.0.0",
-    "developer": "github.com/rodzera",
-    "tech_stack": {
-        "python": "3.11",
-        "frameworks": [
-            "flask"
-        ],
-        "libraries": [
-            "sqlalchemy",
-            "flask-migrate",
-            "marshmallow",
-            "swagger",
-            "gunicorn",
-            "werkzeug"
-        ],
-        "databases": [
-            "sqlite",
-            "mysql",
-            "postgres"
-        ],
-        "tests": [
-            "pytest"
-        ],
-        "ci/cd": [
-            "github actions"
-        ],
-        "devops": [
-            "docker"
-        ]
-    }
-}
-```
+##### Feel free to use or modify this project :)
 
 ## Requirements
 
-- Create a python3.11 venv inside the project's root directory and set up the environment:
+- Create a python3.11 venv within the project's root directory and set up the environment:
 
 ```shell
 sudo add-apt-repository ppa:deadsnakes/ppa
@@ -65,7 +29,7 @@ python3 -m venv venv
 pip install -r src/requirements.txt
 ```
 
-- Export the following env variables:
+- Export the following environment variables (modify the values as needed):
 
 ```shell
 export _ADMIN_PASS=admin
@@ -76,9 +40,10 @@ export _DB_HOST=172.17.0.2
 export _DB_PASS=admin
 ```
 
-- Sample of a postgres database with docker:
+- Sample of a PostgreSQL and MySQL databases using docker:
 
-```shell 
+```shell
+# postgres
 docker run -dit \
 --name database \
 -p 5432:5432 \
@@ -86,14 +51,24 @@ docker run -dit \
 -e POSTGRES_USER=admin \
 -e POSTGRES_PASSWORD=admin \
 postgres:latest
+
+# mysql
+docker run -dit \
+--name database \
+-p 3306:3306 \
+-e MYSQL_DATABASE=db \
+-e MYSQL_USER=admin \
+-e MYSQL_PASSWORD=admin \
+-e MYSQL_RANDOM_ROOT_PASSWORD=True \
+mysql:latest
 ```
 
 ## Migrations
 
-Before starting the application it is essential to upgrade the database to the latest migration version and populate it with the default user/admin roles.
+Before starting the application it is essential to upgrade the database to the latest migration version and populate it with the default user/admin roles. Within the `src` directory:
 
 - Upgrade database: `flask db upgrade`
-- Populate database: `flask populate_database`
+- Populate database: `flask populate_roles`
 
 ## Running
 
@@ -102,11 +77,11 @@ Before starting the application it is essential to upgrade the database to the l
 
 ## Testing
 
-- Inside the project's root directory:
+- Within the project's root directory:
 
 ```shell
 export _TESTING=1
-python3 -m unittest discover -s src/tests -t src
+python3 -m pytest src/tests
 ```
 
 ## Documentation

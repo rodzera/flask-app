@@ -41,7 +41,7 @@ def create_app() -> Flask:
     log.info("Registering after request funcs")
     app.after_request(log_json_after_request)
 
-    from src.app.utils.flask_cli_commands import register_cli_commands
+    from src.app.utils.cli_commands import register_cli_commands
     log.info("Registering cli commands")
     register_cli_commands(app)
 

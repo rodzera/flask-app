@@ -15,7 +15,7 @@ echo "Running migrations"
 flask db upgrade --directory ./src/migrations
 
 echo "Populating database"
-flask populates_roles
+flask populate_roles
 
 
 if [[ -z "${HOST}" ]]; then
