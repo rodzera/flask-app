@@ -45,18 +45,18 @@ export _DB_PASS=admin
 ```shell
 # postgres
 docker run -dit \
---name database \
+--name flask-app-database \
 -p 5432:5432 \
--e POSTGRES_DB=db \
+-e POSTGRES_DB=flask-app \
 -e POSTGRES_USER=admin \
 -e POSTGRES_PASSWORD=admin \
 postgres:latest
 
 # mysql
 docker run -dit \
---name database \
+--name flask-app-database \
 -p 3306:3306 \
--e MYSQL_DATABASE=db \
+-e MYSQL_DATABASE=flask-app \
 -e MYSQL_USER=admin \
 -e MYSQL_PASSWORD=admin \
 -e MYSQL_RANDOM_ROOT_PASSWORD=True \
@@ -75,6 +75,15 @@ Before starting the application it is essential to upgrade the database to the l
 - Development mode: `flask --debug --app src.app -h 0.0.0.0 -p 8080`
 - Production mode: `gunicorn --bind 0.0.0.0:8080 --threads 64 --worker-class gthread --workers 4 --worker-connections 8192 "src.app"`
 
+### Docker Compose
+
+To run the application with docker compose, follow these steps within the `docker-compose` directory:
+
+* Rename the `template.env` file to `.env` and fill the variables with real values
+* Run `docker compose up`
+
+Optionally, you can build a local docker image by running `make` within the `src` directory.
+
 ## Testing
 
 - Within the project's root directory:
@@ -86,4 +95,4 @@ python3 -m pytest src/tests
 
 ## Documentation
 
-- Swagger: `http://127.0.0.1:8080/apidocs`
+- Swagger: `http://0.0.0.0:8080/apidocs`
