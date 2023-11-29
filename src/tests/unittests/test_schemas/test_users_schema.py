@@ -2,6 +2,7 @@ from pytest import raises
 from marshmallow import ValidationError
 from werkzeug.exceptions import NotFound
 
+from src.app.models import db
 from src.app.models.roles import Role
 from src.app.schemas.users import User, UserSchema
 
@@ -17,7 +18,7 @@ def test_roles_schema_load(populate_db):
 
 
 def test_users_schema_dump(populate_db):
-    user = User.query.get(1)
+    user = db.session.get(User, 1)
     dump = UserSchema().dump(user)
 
     assert isinstance(dump, dict)

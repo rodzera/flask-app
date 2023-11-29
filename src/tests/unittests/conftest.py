@@ -30,7 +30,7 @@ def populate_db():
     db.session.add_all(
         [
             User("admin", "admin", [Role("admin")]),
-            User("user", "user", [Role("user")]),
+            User("user", "user", [Role("user")])
         ]
     )
     db.session.commit()

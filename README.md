@@ -90,7 +90,7 @@ Optionally, you can build a local docker image by running `make` within the `src
 
 ```shell
 export _TESTING=1
-python3 -m pytest src/tests
+python3 -m pytest src/tests/unittests
 ```
 
 ## Documentation

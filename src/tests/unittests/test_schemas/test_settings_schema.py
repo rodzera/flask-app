@@ -8,8 +8,8 @@ from src.app.schemas.settings import LoggerLevelSchema
 
 def test_settings_schema_load():
     log = get_logger(__name__)
-    LoggerLevelSchema().load({"level": "CRITICAL"})
-    assert logging.getLevelName(log.level) == "CRITICAL"
+    LoggerLevelSchema().load({"level": "DEBUG"})
+    assert logging.getLevelName(log.level) == "DEBUG"
 
 
 def test_settings_schema_invalid_level():

@@ -1,5 +1,5 @@
 import logging
-from os import path, mkdir
+from os import path, mkdir, getenv
 
 
 def set_logger_level(level: str):
@@ -13,7 +13,8 @@ def set_logger_level(level: str):
 
 
 def get_logger(name: str = None) -> logging.Logger:
-    default_level = logging.DEBUG
+    default_level = logging.INFO
+    handlers = []
     formatter = logging.Formatter(
         fmt="%(asctime)s.%(msecs)03d | %(levelname)s | %(name)s | %(funcName)s | %(lineno)s | %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S"
@@ -22,17 +23,20 @@ def get_logger(name: str = None) -> logging.Logger:
     sh = logging.StreamHandler()
     sh.setLevel(default_level)
     sh.setFormatter(formatter)
+    handlers.append(sh)
 
-    if not path.exists("logs"):
-        mkdir("logs")
+    if not getenv("_TESTING"):
+        if not path.exists("logs"):
+            mkdir("logs")
 
-    fh = logging.FileHandler("logs/app.log", mode="a")
-    fh.setLevel(default_level)
-    fh.setFormatter(formatter)
+        fh = logging.FileHandler("logs/app.log", mode="a")
+        fh.setLevel(default_level)
+        fh.setFormatter(formatter)
+        handlers.append(fh)
 
     logging.basicConfig(
         level=logging.DEBUG,
-        handlers=[fh, sh]
+        handlers=handlers
     )
 
     logger = logging.getLogger(name)
