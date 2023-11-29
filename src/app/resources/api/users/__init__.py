@@ -1,7 +1,8 @@
 from flask import request, jsonify
 
-from src.app.logger import get_logger
+from src.app.models import db
 from src.app.utils import api_auth
+from src.app.logger import get_logger
 from src.app.resources.api import api
 from src.app.models.users import User
 from src.app.schemas.users import UserSchema
@@ -24,7 +25,7 @@ def get_users():
 @api_auth(roles=["admin"])
 @request_validator()
 def get_user(user_id):
-    user = User.query.get_or_404(user_id, "User not found")
+    user = db.get_or_404(User, user_id, "User not found")
     return jsonify(schema.dump(user)), 200
 
 
@@ -41,7 +42,7 @@ def post_user():
 @api_auth(roles=["admin"])
 @request_validator()
 def edit_user(user_id):
-    user = User.query.get_or_404(user_id, "User not found")
+    user = db.get_or_404(User, user_id, "User not found")
     data = request.get_json()
     schema.load(data)
     user = user.update_attrs(**data)
@@ -52,6 +53,6 @@ def edit_user(user_id):
 @api_auth(roles=["admin"])
 @request_validator()
 def delete_user(user_id):
-    user = User.query.get_or_404(user_id, "User not found")
+    user = db.get_or_404(User, user_id, "User not found")
     user.orm_handler("delete")
     return {}, 204

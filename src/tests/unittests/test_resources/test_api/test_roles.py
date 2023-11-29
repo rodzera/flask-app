@@ -1,9 +1,9 @@
 from unittest.mock import MagicMock
 
 from src.app.models.roles import Role
-from src.tests.unittests.utils import headers, admin_auth, user_auth
+from src.tests.unittests.utils import headers, admin_auth, user_auth, \
+    mocked_response
 
-mocked_response = {"test": "test"}
 payload = {"name": "test", "users": []}
 
 
@@ -112,3 +112,4 @@ def test_resource_api_roles_401(client):
     r5 = client.delete("/api/roles/1", headers=headers(**user_auth))
 
     assert all(r.status_code == 401 for r in [r1, r2, r3, r4, r5])
+    assert all(r.mimetype == "application/json" for r in [r1, r2, r3, r4, r5])

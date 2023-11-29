@@ -14,5 +14,6 @@ def basic_auth(username: str, password: str):
     return {"Authorization": f"Basic {encoded_credentials}"}
 
 
+mocked_response = {"test": "test"}
 admin_auth = basic_auth("admin", "admin")
 user_auth = basic_auth("user", "user")

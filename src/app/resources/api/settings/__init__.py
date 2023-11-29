@@ -9,6 +9,8 @@ from src.app.schemas.settings import LoggerLevelSchema
 
 log = get_logger(__name__)
 
+schema = LoggerLevelSchema()
+
 
 @api.route("/settings/logs", methods=["GET"])
 @api_auth(roles=["admin"])
@@ -21,5 +23,5 @@ def get_logger_level():
 @api_auth(roles=["admin"])
 @request_validator()
 def set_logger_level():
-    LoggerLevelSchema().load(request.json)
+    schema.load(request.json)
     return jsonify(request.json)

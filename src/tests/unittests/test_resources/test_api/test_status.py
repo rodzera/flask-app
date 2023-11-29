@@ -11,7 +11,7 @@ def test_resource_api_database_up(client, mocker):
     assert response.status_code == 200
     assert response.mimetype == "application/json"
     assert response.json == {"status": "up", "datetime": dt}
-    assert mocked_f.called_once()
+    mocked_f.assert_called_once()
 
 
 def test_resource_api_database_down(client, mocker):
@@ -20,7 +20,7 @@ def test_resource_api_database_down(client, mocker):
     assert response.status_code == 200
     assert response.mimetype == "application/json"
     assert response.json == {"status": "down"}
-    assert mocked_f.called_once()
+    mocked_f.assert_called_once()
 
 
 def test_resource_api_server_up(client):

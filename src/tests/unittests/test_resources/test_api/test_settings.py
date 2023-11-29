@@ -11,14 +11,14 @@ def test_resource_api_settings_logs_get_200(client):
 
 
 def test_resource_api_settings_logs_put_200(client, mocker):
-    mocked_schema = mocker.patch("src.app.resources.api.settings.LoggerLevelSchema")
+    mocked_schema = mocker.patch("src.app.resources.api.settings.schema")
     response = client.put(
         "/api/settings/logs", json=payload, headers=headers(**admin_auth)
     )
     assert response.status_code == 200
     assert response.mimetype == "application/json"
     assert response.json == payload
-    assert mocked_schema.called_once_with(payload)
+    mocked_schema.load.assert_called_once_with(payload)
 
 
 def test_resource_api_settings_logs_401(client):
