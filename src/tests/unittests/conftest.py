@@ -1,4 +1,4 @@
-import pytest
+from pytest import fixture
 
 from src.app import application
 from src.app.models import db
@@ -6,25 +6,31 @@ from src.app.models.roles import Role
 from src.app.models.users import User
 
 
-@pytest.fixture()
-def app():
-    with application.app_context():
-        User.metadata.create_all(db.engine)
-        Role.metadata.create_all(db.engine)
-        db.session.add_all([
-            User("admin", "admin", [Role("admin")]),
-            User("user", "user", [Role("user")]),
-        ])
-        db.session.commit()
+@fixture(autouse=True)
+def ctx():
+    ctx = application.app_context()
+    with ctx:
+        db.create_all()
+        ctx.push()
 
     yield application
 
-    with application.app_context():
-        db.session.remove()
-        User.metadata.drop_all(db.engine)
-        Role.metadata.drop_all(db.engine)
+    with ctx:
+        db.drop_all()
+        ctx.pop()
 
 
-@pytest.fixture()
-def client(app):
-    return app.test_client()
+@fixture()
+def client(ctx):
+    return ctx.test_client()
+
+
+@fixture()
+def populate_db():
+    db.session.add_all(
+        [
+            User("admin", "admin", [Role("admin")]),
+            User("user", "user", [Role("user")]),
+        ]
+    )
+    db.session.commit()

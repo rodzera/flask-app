@@ -34,5 +34,5 @@ class RoleSchema(ma.SQLAlchemySchema):
             return data
 
         from src.app.models.users import User
-        [User.query.get_or_404(user_id, f"Role {user_id} not found") for user_id in users]
+        [User.query.get_or_404(user_id, f"User {user_id} not found") for user_id in users]
         return data

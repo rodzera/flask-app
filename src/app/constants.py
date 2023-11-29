@@ -30,7 +30,7 @@ ABOUT = {
             "postgres",
         ],
         "tests": [
-            "unittests"
+            "pytest"
         ],
         "ci/cd": [
             "github actions"
