@@ -26,6 +26,25 @@ def test_resource_api_users_get_all_200(client, mocker):
     mocked_schema.dump.assert_called_once_with(mock)
 
 
+def test_resource_api_users_get_by_id_200(client, mocker):
+    mocked_db = mocker.patch("src.app.resources.api.users.db")
+    mocked_schema = mocker.patch("src.app.resources.api.users.schema")
+
+    mock = MagicMock()
+    mocked_db.get_or_404.return_value = mock
+    mocked_schema.dump.return_value = mocked_response
+
+    response = client.get(
+        "/api/users/1", headers=headers(**admin_auth)
+    )
+
+    assert response.status_code == 200
+    assert response.mimetype == "application/json"
+    assert response.json == mocked_response
+    mocked_db.get_or_404.assert_called_once_with(User, 1, "User not found")
+    mocked_schema.dump.assert_called_once_with(mock)
+
+
 def test_resource_api_users_post_201(client, mocker):
     mocked_schema = mocker.patch("src.app.resources.api.users.schema")
 
