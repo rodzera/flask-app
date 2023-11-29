@@ -12,12 +12,13 @@ def authenticate(username, password):
 
     if username == current_app.config["ADMIN_USER"] and password == current_app.config["ADMIN_PASS"]:
         log.debug("Super admin authenticated")
-        return "admin"
+        return ["admin"]
 
     user = User.query.filter_by(username=username).first()
     if user and user.check_password(password):
         log.debug(f"User {username} authenticated")
-        return "users"
+        return [role.name for role in user.roles]
+
     log.debug(f"Not found any user with username '{username}'")
     return False
 
@@ -35,11 +36,11 @@ def api_auth(roles=None):
                 log.debug("Invalid authorization in headers")
                 abort(401)
 
-            if not (role := authenticate(auth.username, auth.password)):
+            if not (user_roles := authenticate(auth.username, auth.password)):
                 log.error("Invalid credentials to access this resource")
                 abort(401)
 
-            if len(roles) > 0 and role not in roles:
+            if len(roles) > 0 and not any([r in roles for r in user_roles]):
                 log.error(f"User '{auth.username}' is not authorized to access this resource")
                 abort(401)
             return func(*args, **kwargs)

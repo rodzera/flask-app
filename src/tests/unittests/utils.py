@@ -14,6 +14,10 @@ def basic_auth(username: str, password: str) -> dict:
     return {"Authorization": f"Basic {encoded_credentials}"}
 
 
-mocked_response = {"test": "test"}
+def _func():
+    return "returned"
+
+
+mocked_payload = {"test": "test"}
 admin_auth = basic_auth("admin", "admin")
 user_auth = basic_auth("user", "user")

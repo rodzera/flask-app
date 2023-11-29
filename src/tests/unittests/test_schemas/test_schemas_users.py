@@ -23,15 +23,21 @@ def test_schemas_users_dump(populate_db):
 
     assert isinstance(dump, dict)
     assert dump["id"] == 1
-    assert dump["username"] == "admin"
+    assert dump["username"] == "uadmin"
     assert "password" not in dump.keys()
     assert all(map(lambda u: isinstance(u, int), dump["roles"]))
 
 
-def test_schemas_users_invalid_username(populate_db):
+def test_schemas_users_not_unique_username(populate_db):
     with raises(ValidationError) as exc:
         UserSchema().load({"username": "user", "password": "password", "roles": [1]})
     assert "Username must be unique" in str(exc.value)
+
+
+def test_schemas_users_forbidden_username(populate_db):
+    with raises(ValidationError) as exc:
+        UserSchema().load({"username": "admin", "password": "password", "roles": [1]})
+    assert "Forbidden username" in str(exc.value)
 
 
 def test_schemas_users_min_username_length(populate_db):

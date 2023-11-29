@@ -1,3 +1,4 @@
+from flask import current_app
 from marshmallow import pre_load
 from marshmallow.validate import ValidationError, Length
 
@@ -24,6 +25,9 @@ class UserSchema(ma.SQLAlchemySchema):
     def validate_unique_username(self, data, **kwargs):
         if (username := data.get("username")) is None:
             return data
+
+        if username == current_app.config["ADMIN_USER"]:
+            raise ValidationError(message="Forbidden username", field_name="username")
 
         if query_with_entities(User, "username", username=username).first():
             log.error(f"Username {username} is not unique")
