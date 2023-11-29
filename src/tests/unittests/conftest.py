@@ -26,6 +26,11 @@ def client(ctx):
 
 
 @fixture()
+def runner(ctx):
+    return ctx.test_cli_runner()
+
+
+@fixture()
 def populate_db():
     db.session.add_all(
         [

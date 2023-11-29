@@ -17,17 +17,16 @@ ABOUT = {
             "flask"
         ],
         "libraries": [
-            "sqlalchemy",
+            "flask-sqlalchemy",
             "flask-migrate",
-            "marshmallow",
-            "swagger",
+            "flask-marshmallow",
+            "flasgger",
             "gunicorn",
             "werkzeug",
         ],
         "databases": [
-            "sqlite",
-            "mysql",
             "postgres",
+            "mysql"
         ],
         "tests": [
             "pytest"

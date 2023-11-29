@@ -24,7 +24,7 @@ A flask app structure with the following features:
 sudo add-apt-repository ppa:deadsnakes/ppa
 sudo apt-get update
 sudo apt install -y python3.11 python3.11-dev python3-venv
-python3 -m venv venv
+python3.11 -m venv venv
 . venv/bin/activate
 pip install -r src/requirements.txt
 ```

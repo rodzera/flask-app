@@ -7,7 +7,7 @@ from src.tests.unittests.utils import headers, admin_auth, user_auth, \
 payload = {"name": "test", "users": []}
 
 
-def test_resource_api_users_get_all_200(client, mocker):
+def test_api_users_get_all_200(client, mocker):
     mocked_model = mocker.patch("src.app.resources.api.users.User")
     mocked_schema = mocker.patch("src.app.resources.api.users.schema")
 
@@ -26,12 +26,11 @@ def test_resource_api_users_get_all_200(client, mocker):
     mocked_schema.dump.assert_called_once_with(mock)
 
 
-def test_resource_api_users_get_by_id_200(client, mocker):
+def test_api_users_get_by_id_200(client, mocker):
     mocked_db = mocker.patch("src.app.resources.api.users.db")
     mocked_schema = mocker.patch("src.app.resources.api.users.schema")
 
-    mock = MagicMock()
-    mocked_db.get_or_404.return_value = mock
+    query = mocked_db.get_or_404.return_value
     mocked_schema.dump.return_value = mocked_response
 
     response = client.get(
@@ -42,14 +41,13 @@ def test_resource_api_users_get_by_id_200(client, mocker):
     assert response.mimetype == "application/json"
     assert response.json == mocked_response
     mocked_db.get_or_404.assert_called_once_with(User, 1, "User not found")
-    mocked_schema.dump.assert_called_once_with(mock)
+    mocked_schema.dump.assert_called_once_with(query)
 
 
-def test_resource_api_users_post_201(client, mocker):
+def test_api_users_post_201(client, mocker):
     mocked_schema = mocker.patch("src.app.resources.api.users.schema")
 
-    mock = MagicMock()
-    mocked_schema.load.return_value = mock
+    model = mocked_schema.load.return_value
     mocked_schema.dump.return_value = mocked_response
 
     response = client.post(
@@ -60,16 +58,15 @@ def test_resource_api_users_post_201(client, mocker):
     assert response.mimetype == "application/json"
     assert response.json == mocked_response
     mocked_schema.load.assert_called_once_with(payload)
-    mocked_schema.dump.assert_called_once_with(mock.orm_handler.return_value)
-    mock.orm_handler.assert_called_once_with("add")
+    mocked_schema.dump.assert_called_once_with(model.orm_handler.return_value)
+    model.orm_handler.assert_called_once_with("add")
 
 
-def test_resource_api_users_put_200(client, mocker):
+def test_api_users_put_200(client, mocker):
     mocked_db = mocker.patch("src.app.resources.api.users.db")
     mocked_schema = mocker.patch("src.app.resources.api.users.schema")
 
-    mock = MagicMock()
-    mocked_db.get_or_404.return_value = mock
+    query = mocked_db.get_or_404.return_value
     mocked_schema.dump.return_value = mocked_response
 
     response = client.put(
@@ -81,16 +78,15 @@ def test_resource_api_users_put_200(client, mocker):
     assert response.json == mocked_response
     mocked_db.get_or_404.assert_called_once_with(User, 1, "User not found")
     mocked_schema.load.assert_called_once()
-    mock.update_attrs.assert_called_once_with(**payload)
-    mocked_schema.dump.assert_called_once_with(mock.update_attrs.return_value)
+    query.update_attrs.assert_called_once_with(**payload)
+    mocked_schema.dump.assert_called_once_with(query.update_attrs.return_value)
 
 
-def test_resource_api_users_delete_200(client, mocker):
+def test_api_users_delete_200(client, mocker):
     mocked_db = mocker.patch("src.app.resources.api.users.db")
     mocked_schema = mocker.patch("src.app.resources.api.users.schema")
 
-    mock = MagicMock()
-    mocked_db.get_or_404.return_value = mock
+    query = mocked_db.get_or_404.return_value
     mocked_schema.dump.return_value = mocked_response
 
     response = client.delete(
@@ -101,10 +97,10 @@ def test_resource_api_users_delete_200(client, mocker):
     assert response.mimetype == "application/json"
     assert response.get_json(silent=True) is None
     mocked_db.get_or_404.assert_called_once_with(User, 1, "User not found")
-    mock.orm_handler.assert_called_once_with("delete")
+    query.orm_handler.assert_called_once_with("delete")
 
 
-def test_resource_api_users_401(client):
+def test_api_users_401(client):
     r1 = client.get("/api/users", headers=headers(**user_auth))
     r2 = client.get("/api/users/1", headers=headers(**user_auth))
     r3 = client.post("/api/users", headers=headers(**user_auth))
