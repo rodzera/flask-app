@@ -1,4 +1,3 @@
-from typing import Tuple
 from base64 import b64encode
 
 
@@ -9,8 +8,11 @@ def headers(**kwargs):
     }
 
 
-def basic_auth(cred: Tuple = ("admin", "admin")):
-    u, p = cred
-    credentials = f"{u}:{p}".encode()
+def basic_auth(username: str, password: str):
+    credentials = f"{username}:{password}".encode()
     encoded_credentials = b64encode(credentials).decode()
     return {"Authorization": f"Basic {encoded_credentials}"}
+
+
+admin_auth = basic_auth("admin", "admin")
+user_auth = basic_auth("user", "user")

@@ -11,15 +11,15 @@ log = get_logger(__name__)
 
 
 @api.route("/settings/logs", methods=["GET"])
-@request_validator()
 @api_auth(roles=["admin"])
+@request_validator()
 def get_logger_level():
     return {"level": getLevelName(log.level)}, 200
 
 
 @api.route("/settings/logs", methods=["PUT"])
-@request_validator(content_type=True)
 @api_auth(roles=["admin"])
+@request_validator()
 def set_logger_level():
     LoggerLevelSchema().load(request.json)
     return jsonify(request.json)

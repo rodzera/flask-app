@@ -16,10 +16,9 @@ def log_json_after_request(response):
 
 class Mimetypes(Enum):
     json = "application/json"
-    form = "application/x-www-form-urlencoded"
 
 
-def request_validator(mimetype: str = "json", content_type: bool = False):
+def request_validator(mimetype: str = "json"):
     def decorator(func):
         @wraps(func)
         def wrap(*args, **kwargs):
@@ -39,16 +38,11 @@ def request_validator(mimetype: str = "json", content_type: bool = False):
                 log.error("Invalid accept headers in the request")
                 abort(406)
 
-            if not content_type:
+            if request.method not in ["POST", "PUT"]:
                 return func(*args, **kwargs)
 
-            data = False
-            if mimetype == "json":
-                data = request.get_json(silent=True)
-                if not data:
-                    abort(400, "Missing json data")
-            elif mimetype == "form":
-                data = request.form
+            if not (data := request.get_json(silent=True)):
+                abort(400, "Missing json data")
 
             log.debug(f"Request content-type in headers: {request.content_type}")
             log.debug(f"Request data: {data}") if data else log.debug("No request data")

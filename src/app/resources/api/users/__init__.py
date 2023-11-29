@@ -13,24 +13,24 @@ schema = UserSchema()
 
 
 @api.route("/users", methods=["GET"])
-@request_validator()
 @api_auth(roles=["admin"])
+@request_validator()
 def get_users():
     data = {"users": [schema.dump(u) for u in User.query.all()]}
     return jsonify(data), 200
 
 
 @api.route("/users/<int:user_id>", methods=["GET"])
-@request_validator()
 @api_auth(roles=["admin"])
+@request_validator()
 def get_user(user_id):
     user = User.query.get_or_404(user_id, "User not found")
     return jsonify(schema.dump(user)), 200
 
 
 @api.route("/users", methods=["POST"])
-@request_validator(content_type=True)
 @api_auth(roles=["admin"])
+@request_validator()
 def post_user():
     data = request.get_json()
     user = schema.load(data).orm_handler("add")
@@ -38,8 +38,8 @@ def post_user():
 
 
 @api.route("/users/<int:user_id>", methods=["PUT"])
-@request_validator(content_type=True)
 @api_auth(roles=["admin"])
+@request_validator()
 def edit_user(user_id):
     user = User.query.get_or_404(user_id, "User not found")
     data = request.get_json()
@@ -49,8 +49,8 @@ def edit_user(user_id):
 
 
 @api.route("/users/<int:user_id>", methods=["DELETE"])
-@request_validator()
 @api_auth(roles=["admin"])
+@request_validator()
 def delete_user(user_id):
     user = User.query.get_or_404(user_id, "User not found")
     user.orm_handler("delete")
