@@ -22,6 +22,8 @@ class BaseModel(object):
     def update_attrs(self, **attrs):
         log.info(f"Updating attributes {attrs} for model {self}")
         for key, value in attrs.items():
+            if key == "password":
+                raise AttributeError("Protected attribute")
             if hasattr(self, key):
                 setattr(self, key, value)
         return self.orm_handler("add")

@@ -80,9 +80,11 @@ Before starting the application it is essential to upgrade the database to the l
 To run the application with docker compose, follow these steps within the `docker-compose` directory:
 
 * Rename the `template.env` file to `.env` and fill the variables with real values
-* Run `docker compose up`
+* Run: `docker compose up`
 
-Optionally, you can build a local docker image by running `make` within the `src` directory.
+Optionally, you can build a local docker image within the `src` directory:
+* Export the Docker Hub environment variable: `export DOCKERHUB_REPO=your_repo`
+* Run: `make`
 
 ## Testing
 

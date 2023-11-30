@@ -6,6 +6,8 @@ from src.app.logger import get_logger
 
 log = get_logger(__name__)
 
+__all__ = ["log_json_after_request", "request_validator"]
+
 
 def log_json_after_request(response: Response) -> Response:
     if response.get_json():
