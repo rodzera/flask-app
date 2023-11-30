@@ -1,6 +1,7 @@
 from marshmallow import pre_load
 from marshmallow.validate import ValidationError, Length
 
+from src.app.models import db
 from src.app.schemas import ma
 from src.app.logger import get_logger
 from src.app.models.roles import Role
@@ -34,5 +35,5 @@ class RoleSchema(ma.SQLAlchemySchema):
             return data
 
         from src.app.models.users import User
-        [User.query.get_or_404(user_id, f"Role {user_id} not found") for user_id in users]
+        [db.get_or_404(User, user_id, description=f"User {user_id} not found") for user_id in users]
         return data

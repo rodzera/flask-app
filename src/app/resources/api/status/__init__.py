@@ -1,7 +1,7 @@
 from src.app.constants import VERSION
 from src.app.resources.api import api
 from src.app.logger import get_logger
-from src.app.utils.sql import get_db_timestamp
+from src.app.utils.helpers.queries import get_db_timestamp
 from src.app.utils.handlers.request import request_validator
 
 log = get_logger(__name__)

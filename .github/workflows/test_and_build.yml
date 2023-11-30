@@ -42,7 +42,7 @@ jobs:
       name: Run unittests
       run: |
         export _TESTING=1
-        python -m unittest discover -s src/tests -t src
+        python3 -m pytest src/tests/unittests
 
   docker_hub:
     name: Publish docker image to docker hub

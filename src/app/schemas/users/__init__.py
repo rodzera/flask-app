@@ -1,6 +1,8 @@
+from flask import current_app
 from marshmallow import pre_load
 from marshmallow.validate import ValidationError, Length
 
+from src.app.models import db
 from src.app.schemas import ma
 from src.app.logger import get_logger
 from src.app.models.users import User
@@ -24,6 +26,9 @@ class UserSchema(ma.SQLAlchemySchema):
         if (username := data.get("username")) is None:
             return data
 
+        if username == current_app.config["ADMIN_USER"]:
+            raise ValidationError(message="Forbidden username", field_name="username")
+
         if query_with_entities(User, "username", username=username).first():
             log.error(f"Username {username} is not unique")
             raise ValidationError(message="Username must be unique", field_name="username")
@@ -35,5 +40,5 @@ class UserSchema(ma.SQLAlchemySchema):
             return data
 
         from src.app.models.roles import Role
-        [Role.query.get_or_404(role_id, f"Role {role_id} not found") for role_id in roles]
+        [db.get_or_404(Role, role_id, description=f"Role {role_id} not found") for role_id in roles]
         return data

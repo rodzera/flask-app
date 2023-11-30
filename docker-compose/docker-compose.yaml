@@ -1,11 +1,5 @@
 version: "3.9"
 
-networks:
-  default:
-    ipam:
-      config:
-        - subnet: 172.18.0.0/24
-
 services:
   flask-app:
     image: ${DOCKERHUB_REPO}/flask-app:latest
@@ -18,7 +12,7 @@ services:
       _ADMIN_PASS: ${_ADMIN_PASS}
       _DB_PROVIDER: postgresql
       _DB_HOST: flask-app-database
-      _DB_DATABASE: db
+      _DB_DATABASE: flask-app
       _DB_PASS: ${_DB_PASS}
       HOST: 0.0.0.0
       PORT: 8080
@@ -30,7 +24,6 @@ services:
       default:
         aliases:
           - flask-app
-        ipv4_address: 172.18.0.2
     ports:
       - "8080:8080"
     volumes:
@@ -40,7 +33,7 @@ services:
     container_name: flask-app-database
     restart: unless-stopped
     environment:
-      POSTGRES_DB: db
+      POSTGRES_DB: flask-app
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: ${_DB_PASS}
       TZ: America/Sao_Paulo
@@ -57,4 +50,3 @@ services:
       default:
         aliases:
           - flask-app-database
-        ipv4_address: 172.18.0.3

@@ -11,7 +11,7 @@ from src.app.utils import log_json_after_request
 log = get_logger(__name__)
 
 
-def create_app():
+def create_app() -> Flask:
     app = Flask(__name__)
 
     log.info("Initializing migrations")
@@ -41,7 +41,7 @@ def create_app():
     log.info("Registering after request funcs")
     app.after_request(log_json_after_request)
 
-    from src.app.utils.flask_cli_commands import register_cli_commands
+    from src.app.utils.cli_commands import register_cli_commands
     log.info("Registering cli commands")
     register_cli_commands(app)
 
