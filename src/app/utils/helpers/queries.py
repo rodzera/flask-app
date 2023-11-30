@@ -5,6 +5,8 @@ from src.app.factory import db, get_logger
 
 log = get_logger(__name__)
 
+__all__ = ["get_db_timestamp", "query_with_entities"]
+
 
 def get_db_timestamp() -> Union[str, bool]:
     log.info("Querying db current timestamp")

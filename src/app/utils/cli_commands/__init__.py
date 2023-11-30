@@ -5,6 +5,8 @@ from src.app.logger import get_logger
 
 log = get_logger(__name__)
 
+__all__ = ["register_cli_commands"]
+
 
 def register_cli_commands(app: Flask):
     @app.cli.command(name="populate_roles", help="This function populates the database with default roles.")

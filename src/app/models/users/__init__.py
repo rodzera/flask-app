@@ -18,15 +18,10 @@ class User(db.Model, BaseModel):
             roles = []
 
         self.username = username
-        self._password = password
+        self.set_password(password)
         self.roles = roles
 
-    @hybrid_property
-    def _password(self):
-        raise AttributeError
-
-    @_password.setter
-    def _password(self, password: str):
+    def set_password(self, password: str):
         self.password = generate_password_hash(password)
 
     def check_password(self, password: str) -> bool:

@@ -8,6 +8,8 @@ from src.app.utils.helpers.json import jsonify_error_response
 
 log = get_logger(__name__)
 
+__all__ = ["register_error_handlers"]
+
 
 def handle_any_error(e: HTTPException) -> WerkzeugResponse:
     log.error(f"Handling error: {e.__repr__()}")

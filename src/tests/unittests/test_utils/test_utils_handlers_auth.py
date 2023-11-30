@@ -10,7 +10,7 @@ def test_authenticate_function(mocker):
     admin = authenticate("admin", "admin")
     assert admin == ["admin"]
 
-    mocked_model = mocker.patch("src.app.utils.handlers.authentication.User")
+    mocked_model = mocker.patch("src.app.utils.handlers.auth.User")
     mocked_user = mocked_model.query.filter_by.return_value.first.return_value
     mocked_user.check_password.return_value = True
     r1, r2 = MagicMock(), MagicMock()
@@ -30,7 +30,7 @@ def test_authenticate_function(mocker):
 
 
 def test_api_auth_decorator_success(ctx, mocker):
-    mocked_authentication = mocker.patch("src.app.utils.handlers.authentication.authenticate")
+    mocked_authentication = mocker.patch("src.app.utils.handlers.auth.authenticate")
     mocked_authentication.return_value = ["admin"]
 
     with ctx.test_request_context("/route", headers=headers(**user_auth)):
@@ -47,7 +47,7 @@ def test_api_auth_decorator_invalid_headers(ctx):
 
 
 def test_api_auth_decorator_invalid_auth(ctx, mocker):
-    mocked_authentication = mocker.patch("src.app.utils.handlers.authentication.authenticate")
+    mocked_authentication = mocker.patch("src.app.utils.handlers.auth.authenticate")
     mocked_authentication.return_value = False
 
     with ctx.test_request_context("/route", headers=headers(**user_auth)):
@@ -57,7 +57,7 @@ def test_api_auth_decorator_invalid_auth(ctx, mocker):
 
 
 def test_api_auth_decorator_invalid_role(ctx, mocker):
-    mocked_authentication = mocker.patch("src.app.utils.handlers.authentication.authenticate")
+    mocked_authentication = mocker.patch("src.app.utils.handlers.auth.authenticate")
     mocked_authentication.return_value = ["user"]
 
     with ctx.test_request_context("/route", headers=headers(**user_auth)):

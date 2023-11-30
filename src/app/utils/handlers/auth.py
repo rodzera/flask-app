@@ -6,6 +6,8 @@ from src.app.models.users import User
 
 log = get_logger(__name__)
 
+__all__ = ["authenticate", "api_auth"]
+
 
 def authenticate(username, password):
     log.debug(f"Validating credentials for user '{username}'")
