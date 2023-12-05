@@ -23,8 +23,8 @@ jobs:
     -
       name: Checking version.yaml
       run: |
-        CHECK=$(curl -s -H 'Authorization: Bearer ${{ secrets.DOCKERHUB_TOKEN }}' 'https://hub.docker.com/v2/namespaces/${{ secrets.DOCKERHUB_USER }}/repositories/flask-app/tags/${{ env.VERSION }}'  | jq '.tag_status')
-        bash ./src/check_version.sh $CHECK
+        CHECK=$(curl -s -H 'Authorization: Bearer ${{ secrets.DOCKERHUB_TOKEN }}' 'https://hub.docker.com/v2/namespaces/${{ secrets.DOCKERHUB_USER }}/repositories/flask-app/tags/${{ env.VERSION }}')
+        bash ./src/check_version.sh "$CHECK"
 
     -
       name: Set up python
