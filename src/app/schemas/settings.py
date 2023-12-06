@@ -19,3 +19,4 @@ class LoggerLevelSchema(ma.Schema):
         level = data["level"]
         log.info(f"Setting logger level to: {level}")
         set_logger_level(level)
+        return data

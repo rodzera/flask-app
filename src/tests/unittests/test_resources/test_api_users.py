@@ -1,19 +1,9 @@
-from unittest.mock import MagicMock
-
-from src.app.models.users import User
-from src.tests.unittests.utils import headers, admin_auth, user_auth, \
-    mocked_payload
-
-payload = {"name": "test", "users": []}
+from src.tests.unittests.utils import headers, admin_auth, user_auth, payload
 
 
 def test_api_users_get_all_200(client, mocker):
-    mocked_model = mocker.patch("src.app.resources.api.users.User")
-    mocked_schema = mocker.patch("src.app.resources.api.users.schema")
-
-    mock = MagicMock()
-    mocked_model.query.all.return_value = [mock]
-    mocked_schema.dump.return_value = mocked_payload
+    mocked_cls = mocker.patch("src.app.resources.api.users.User")
+    mocked_cls.dump_all.return_value = [payload]
 
     response = client.get(
         "/api/users", headers=headers(**admin_auth)
@@ -21,17 +11,13 @@ def test_api_users_get_all_200(client, mocker):
 
     assert response.status_code == 200
     assert response.mimetype == "application/json"
-    assert mocked_payload in response.json["users"]
-    mocked_model.query.all.assert_called_once()
-    mocked_schema.dump.assert_called_once_with(mock)
+    assert payload in response.json["users"]
+    mocked_cls.dump_all.assert_called_once()
 
 
 def test_api_users_get_by_id_200(client, mocker):
-    mocked_db = mocker.patch("src.app.resources.api.users.db")
-    mocked_schema = mocker.patch("src.app.resources.api.users.schema")
-
-    query = mocked_db.get_or_404.return_value
-    mocked_schema.dump.return_value = mocked_payload
+    mocked_cls = mocker.patch("src.app.resources.api.users.User")
+    mocked_cls.dump.return_value = payload
 
     response = client.get(
         "/api/users/1", headers=headers(**admin_auth)
@@ -39,16 +25,13 @@ def test_api_users_get_by_id_200(client, mocker):
 
     assert response.status_code == 200
     assert response.mimetype == "application/json"
-    assert response.json == mocked_payload
-    mocked_db.get_or_404.assert_called_once_with(User, 1, "User not found")
-    mocked_schema.dump.assert_called_once_with(query)
+    assert response.json == payload
+    mocked_cls.dump.assert_called_once_with(1)
 
 
 def test_api_users_post_201(client, mocker):
-    mocked_schema = mocker.patch("src.app.resources.api.users.schema")
-
-    model = mocked_schema.load.return_value
-    mocked_schema.dump.return_value = mocked_payload
+    mocked_cls = mocker.patch("src.app.resources.api.users.User")
+    mocked_cls.load.return_value.self_dump.return_value = payload
 
     response = client.post(
         "/api/users", headers=headers(**admin_auth), json=payload
@@ -56,18 +39,14 @@ def test_api_users_post_201(client, mocker):
 
     assert response.status_code == 201
     assert response.mimetype == "application/json"
-    assert response.json == mocked_payload
-    mocked_schema.load.assert_called_once_with(payload)
-    mocked_schema.dump.assert_called_once_with(model.orm_handler.return_value)
-    model.orm_handler.assert_called_once_with("add")
+    assert response.json == payload
+    mocked_cls.load.assert_called_once_with(**payload)
+    mocked_cls.load.return_value.self_dump.assert_called_once_with()
 
 
 def test_api_users_put_200(client, mocker):
-    mocked_db = mocker.patch("src.app.resources.api.users.db")
-    mocked_schema = mocker.patch("src.app.resources.api.users.schema")
-
-    query = mocked_db.get_or_404.return_value
-    mocked_schema.dump.return_value = mocked_payload
+    mocked_cls = mocker.patch("src.app.resources.api.users.User")
+    mocked_cls.update.return_value.self_dump.return_value = payload
 
     response = client.put(
         "/api/users/1", json=payload, headers=headers(**admin_auth)
@@ -75,19 +54,14 @@ def test_api_users_put_200(client, mocker):
 
     assert response.status_code == 200
     assert response.mimetype == "application/json"
-    assert response.json == mocked_payload
-    mocked_db.get_or_404.assert_called_once_with(User, 1, "User not found")
-    mocked_schema.load.assert_called_once()
-    query.update_attrs.assert_called_once_with(**payload)
-    mocked_schema.dump.assert_called_once_with(query.update_attrs.return_value)
+    assert response.json == payload
+    mocked_cls.update.assert_called_once_with(1, **payload)
+    mocked_cls.update.return_value.self_dump.assert_called_once_with()
 
 
 def test_api_users_delete_200(client, mocker):
-    mocked_db = mocker.patch("src.app.resources.api.users.db")
-    mocked_schema = mocker.patch("src.app.resources.api.users.schema")
-
-    query = mocked_db.get_or_404.return_value
-    mocked_schema.dump.return_value = mocked_payload
+    mocked_cls = mocker.patch("src.app.resources.api.users.User")
+    mocked_cls.delete.return_value = {}
 
     response = client.delete(
         "/api/users/1", headers=headers(**admin_auth)
@@ -96,8 +70,7 @@ def test_api_users_delete_200(client, mocker):
     assert response.status_code == 204
     assert response.mimetype == "application/json"
     assert response.get_json(silent=True) is None
-    mocked_db.get_or_404.assert_called_once_with(User, 1, "User not found")
-    query.orm_handler.assert_called_once_with("delete")
+    mocked_cls.delete.assert_called_once_with(1)
 
 
 def test_api_users_401(client):

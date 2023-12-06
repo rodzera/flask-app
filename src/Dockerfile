@@ -5,7 +5,7 @@ LABEL github="github.com/rodzera"
 
 COPY . /src
 
-RUN apt update ; apt upgrade -y ; apt install vim -y ;  apt clean
+RUN apt update ; apt upgrade -y ; apt install nginx vim -y ;  apt clean
 
 RUN pip install -U pip ; pip install -r /src/requirements.txt
 

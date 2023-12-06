@@ -35,7 +35,7 @@ pip install -r src/requirements.txt
 export _ADMIN_PASS=admin
 export _SECRET_KEY=ABCDEFGH12345678
 export _DB_PROVIDER=postgresql
-export _DB_DATABASE=db
+export _DB_DATABASE=flask-app
 export _DB_HOST=172.17.0.2
 export _DB_PASS=admin
 ```
@@ -86,15 +86,28 @@ Optionally, you can build a local docker image within the `src` directory:
 * Export the Docker Hub environment variable: `export DOCKERHUB_REPO=your_repo`
 * Run: `make`
 
+## Docker Hub Build
+
+For the Docker Hub job to work properly in GitHub Actions pipelines, it is required to set the following variables in the GitHub Actions [secrets](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions):
+* The Docker Hub username/password is your Docker Hub login credentials.
+* The Docker Hub [token](https://docs.docker.com/docker-hub/api/latest/#tag/authentication/operation/PostUsersLogin) is a JWT that authenticates the user with Docker Hub APIs.
+
+```text
+DOCKERHUB_USER=username
+DOCKERHUB_PASS=p4ssw0rd
+DOCKERHUB_TOKEN=s3cr3t_t0k3n
+```
+
 ## Testing
 
-- Within the project's root directory:
+- The unittests can be executed using either pytest or with [coverage](https://github.com/nedbat/coveragepy). Within the project's root directory:
 
 ```shell
 export _TESTING=1
 python3 -m pytest src/tests/unittests
+coverage run -m pytest src/tests/unittests && coverage report -m
 ```
 
 ## Documentation
 
-- Swagger: `http://0.0.0.0:8080/apidocs`
+* The API is fully available and documented through the Swagger apidocs at: `http://0.0.0.0:8080/apidocs`.

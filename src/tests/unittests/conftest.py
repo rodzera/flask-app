@@ -28,14 +28,3 @@ def client(ctx):
 @fixture()
 def runner(ctx):
     return ctx.test_cli_runner()
-
-
-@fixture()
-def populate_db():
-    db.session.add_all(
-        [
-            User("uadmin", "uadmin", [Role("admin")]),
-            User("user", "user", [Role("user")])
-        ]
-    )
-    db.session.commit()

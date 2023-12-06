@@ -173,9 +173,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  rows:
-                    type: integer
-                    example: 1
                   roles:
                     type: array
                     items:
@@ -305,9 +302,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  rows:
-                    type: integer
-                    example: 1
                   users:
                     type: array
                     items:
@@ -442,11 +436,11 @@ components:
         name:
           description: Role name.
           type: string
-          example: users
+          example: user
         users:
           description: Users linked with role.
           type: array
-          example: ["1", "2"]
+          example: ["1"]
     UserSchema:
       description: User response schema.
       type: object
@@ -467,7 +461,7 @@ components:
         roles:
           description: Roles linked with user.
           type: array
-          example: ["1", "2"]
+          example: ["1"]
     SuccessResponse:
       description: The default success message schema.
       type: object
@@ -519,8 +513,8 @@ components:
             role:
               summary: role
               value:
-                name: users
-                users: ["1", "2"]
+                name: user
+                users: ["1"]
     UserPayload:
       description: User payload schema.
       required: true
@@ -543,7 +537,7 @@ components:
               value:
                 username: username
                 password: password
-                roles: ["1", "2"]
+                roles: ["1"]
     LoggerLevelPayload:
       description: Log level payload schema.
       required: true

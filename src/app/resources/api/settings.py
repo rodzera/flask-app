@@ -3,8 +3,7 @@ from logging import getLevelName
 
 from src.app.logger import get_logger
 from src.app.resources.api import api
-from src.app.utils import api_auth
-from src.app.utils.handlers.request import request_validator
+from src.app.utils import api_auth, request_validator
 from src.app.schemas.settings import LoggerLevelSchema
 
 log = get_logger(__name__)
@@ -23,5 +22,4 @@ def get_logger_level():
 @api_auth(roles=["admin"])
 @request_validator()
 def set_logger_level():
-    schema.load(request.json)
-    return jsonify(request.json)
+    return jsonify(schema.load(request.json))

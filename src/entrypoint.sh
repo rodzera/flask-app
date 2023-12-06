@@ -32,28 +32,28 @@ echo "Server port: $PORT"
 
 if [[ "$DEBUG" -eq 1 || "$_DEBUG" -eq 1 || "$FLASK_DEBUG" -eq 1 ]]; then
 
-    echo "Starting development server"
-    flask --debug run -h $HOST -p $PORT
+  echo "Starting development server"
+  flask --debug run -h $HOST -p $PORT
 
 else
 
-    if [[ -z "${WORKERS}" ]]; then
-      export WORKERS=4
-    fi
+  if [[ -z "${WORKERS}" ]]; then
+    export WORKERS=4
+  fi
 
-    if [[ -z "${THREADS}" ]]; then
-      export THREADS=64
-    fi
+  if [[ -z "${THREADS}" ]]; then
+    export THREADS=64
+  fi
 
-    if [[ -z "${WORKER_CONNECTIONS}" ]]; then
-      export WORKER_CONNECTIONS=8192
-    fi
+  if [[ -z "${WORKER_CONNECTIONS}" ]]; then
+    export WORKER_CONNECTIONS=8192
+  fi
 
-    echo "Server workers class: gthread"
-    echo "Server workers: $WORKERS"
-    echo "Server threads: $THREADS"
-    echo "Worker connections limit: $WORKER_CONNECTIONS"
-    echo "Starting production server"
-    gunicorn --bind "$HOST:$PORT" --threads $THREADS --worker-class gthread --workers $WORKERS --worker-connections $WORKER_CONNECTIONS "src.app"
+  echo "Server workers class: gthread"
+  echo "Server workers: $WORKERS"
+  echo "Server threads: $THREADS"
+  echo "Worker connections limit: $WORKER_CONNECTIONS"
+  echo "Starting production server"
+  gunicorn --bind "$HOST:$PORT" --threads $THREADS --worker-class gthread --workers $WORKERS --worker-connections $WORKER_CONNECTIONS "src.app"
 
 fi
