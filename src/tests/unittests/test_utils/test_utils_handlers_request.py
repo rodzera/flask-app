@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 from werkzeug.exceptions import NotImplemented, NotAcceptable, BadRequest
 
 from src.app.utils import log_json_after_request, request_validator
-from src.tests.unittests.utils import _func, mocked_payload, headers
+from src.tests.unittests.utils import _func, payload, headers
 
 
 def test_log_json_after_request():
@@ -22,7 +22,7 @@ def test_request_validator_without_payload(ctx):
 
 
 def test_request_validator_with_payload(ctx):
-    with ctx.test_request_context("/route", method="POST", json=mocked_payload, headers=headers()):
+    with ctx.test_request_context("/route", method="POST", json=payload, headers=headers()):
         result = request_validator()(_func)()
         assert result == "returned"
 
@@ -35,7 +35,7 @@ def test_request_validator_501(ctx):
 
 
 def test_request_validator_406(ctx):
-    with ctx.test_request_context("/route", method="POST", json=mocked_payload):
+    with ctx.test_request_context("/route", method="POST", json=payload):
         with raises(NotAcceptable) as exc:
             request_validator()(_func)()
         assert "Not Acceptable" in str(exc.value)

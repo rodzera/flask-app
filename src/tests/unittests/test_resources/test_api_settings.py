@@ -12,6 +12,7 @@ def test_api_settings_logs_get_200(client):
 
 def test_api_settings_logs_put_200(client, mocker):
     mocked_schema = mocker.patch("src.app.resources.api.settings.schema")
+    mocked_schema.load.return_value = payload
     response = client.put(
         "/api/settings/logs", json=payload, headers=headers(**admin_auth)
     )

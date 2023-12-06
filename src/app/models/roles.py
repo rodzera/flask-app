@@ -8,10 +8,10 @@ log = get_logger(__name__)
 
 class Role(db.Model, BaseModel):
     __tablename__ = "roles"
-
-    DEFAULT_ROLES = ("admin", "user")
     name = db.Column(db.String(50), unique=True, nullable=False, index=True)
     users = db.relationship("User", secondary=UsersRolesRelationship, back_populates="roles")
+    
+    DEFAULT_ROLES = ("admin", "user")
 
     def __init__(self, name: str, users=None):
         if users is None:
@@ -19,10 +19,16 @@ class Role(db.Model, BaseModel):
 
         self.name = name
         self.users = users
+        self.orm("add")
 
+    @staticmethod
+    def schema():
+        from src.app.schemas.roles import RoleSchema
+        return RoleSchema()
 
-def create_default_roles():
-    for role in Role.DEFAULT_ROLES:
-        if Role.query.filter_by(name=role).first() is None:
-            log.info(f"Creating role {role}")
-            Role(name=role).orm_handler("add")
+    @classmethod
+    def create_default_roles(cls):
+        for role in cls.DEFAULT_ROLES:
+            if cls.w_entities("name", name=role).first() is None:
+                log.info(f"Creating role {role}")
+                cls(name=role)

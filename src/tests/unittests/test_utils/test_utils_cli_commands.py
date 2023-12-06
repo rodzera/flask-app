@@ -1,4 +1,4 @@
 def test_populate_roles_command(mocker, runner):
-    mocked_function = mocker.patch("src.app.utils.cli_commands.create_default_roles")
+    mocked_cls = mocker.patch("src.app.utils.cli_commands.Role")
     runner.invoke(args="populate_roles")
-    mocked_function.assert_called_once()
+    mocked_cls.create_default_roles.assert_called_once()

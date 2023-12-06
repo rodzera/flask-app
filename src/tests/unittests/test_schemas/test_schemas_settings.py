@@ -8,7 +8,10 @@ from src.app.schemas.settings import LoggerLevelSchema
 
 def test_schemas_settings_load():
     log = get_logger(__name__)
-    LoggerLevelSchema().load({"level": "DEBUG"})
+    data = {"level": "DEBUG"}
+    response = LoggerLevelSchema().load(data)
+
+    assert data == response
     assert logging.getLevelName(log.level) == "DEBUG"
 
 
