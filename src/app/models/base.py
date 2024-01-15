@@ -9,6 +9,10 @@ log = get_logger(__name__)
 
 
 class BaseModel(object):
+    """
+    Base class for SQLAlchemy models.
+    """
+
     id = db.Column(db.Integer, primary_key=True)
     created_at = db.Column(db.DateTime, default=db.func.now(), index=True)
     updated_on = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
@@ -66,34 +70,9 @@ class BaseModel(object):
         return cls.query.with_entities(*attrs).filter_by(**kattrs)
 
     @classmethod
-    def load(cls, **kattrs):
-        return cls.schema().load(**kattrs)
-
-    @classmethod
     def update(cls, _id: int, **kattrs):
         return cls.get(_id).update_attrs(**kattrs)
 
     @classmethod
     def delete(cls, _id: int):
         return cls.get(_id).orm("delete")
-
-    @classmethod
-    def dump(cls, _id: int):
-        return cls.schema().dump(cls.get(_id))
-
-    @classmethod
-    def dump_all(cls):
-        return [_cls.self_dump() for _cls in cls.get_all()]
-
-    def self_dump(self):
-        return self.schema().dump(self)
-
-    @staticmethod
-    def query():
-        """ This method will be overridden. """
-        pass
-
-    @staticmethod
-    def schema():
-        """ This method will be overridden. """
-        pass

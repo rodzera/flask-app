@@ -2,10 +2,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from src.app.models import db
 from src.app.models.base import BaseModel
+from src.app.models.schema import SchemaModel
 from src.app.models.relationships import UsersRolesRelationship
 
 
-class User(db.Model, BaseModel):
+class User(db.Model, BaseModel, SchemaModel):
     __tablename__ = "users"
     username = db.Column(db.String(50), unique=True, nullable=False, index=True)
     password = db.Column(db.String(255), nullable=False)

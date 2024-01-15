@@ -1,5 +1,5 @@
 from pytest import raises
-from unittest.mock import PropertyMock, MagicMock
+from unittest.mock import PropertyMock
 from werkzeug.exceptions import InternalServerError
 from sqlalchemy.orm.exc import DetachedInstanceError
 
@@ -88,7 +88,7 @@ def test_class_method_get(mocker):
 
 
 def test_class_method_get_all(mocker):
-    mocked_method = mocker.patch.object(BaseModel, "query")
+    mocked_method = mocker.patch.object(BaseModel, "query", create=True)
     mocked_method.all.return_value = []
 
     assert BaseModel.get_all() == []
@@ -96,7 +96,7 @@ def test_class_method_get_all(mocker):
 
 
 def test_class_method_filter_by(mocker):
-    mocked_method = mocker.patch.object(BaseModel, "query")
+    mocked_method = mocker.patch.object(BaseModel, "query",  create=True)
     mocked_method.filter_by.return_value = []
 
     assert BaseModel.filter_by() == []
@@ -110,7 +110,7 @@ def test_class_method_w_entities_value_error():
 
 
 def test_class_method_w_entities_with_attrs(mocker):
-    mocked_method = mocker.patch.object(BaseModel, "query")
+    mocked_method = mocker.patch.object(BaseModel, "query",  create=True)
 
     BaseModel.w_entities("id", "created_at", "updated_on")
     mocked_method.with_entities.assert_called_once_with(BaseModel.id, BaseModel.created_at, BaseModel.updated_on)
@@ -118,20 +118,11 @@ def test_class_method_w_entities_with_attrs(mocker):
 
 
 def test_class_method_w_entities_with_kattrs(mocker):
-    mocked_method = mocker.patch.object(BaseModel, "query")
+    mocked_method = mocker.patch.object(BaseModel, "query",  create=True)
 
     BaseModel.w_entities("id", "created_at", "updated_on", id=1, created_at=2, updated_on=3)
     mocked_method.with_entities.assert_called_once_with(BaseModel.id, BaseModel.created_at, BaseModel.updated_on)
     mocked_method.with_entities.return_value.filter_by.assert_called_once_with(id=1, created_at=2, updated_on=3)
-
-
-def test_class_method_load(mocker):
-    mocked_schema = mocker.patch.object(BaseModel, "schema")
-    mocked_schema.return_value.load.return_value = []
-
-    assert BaseModel.load(test="test") == []
-    mocked_schema.assert_called_once()
-    mocked_schema.return_value.load.assert_called_once_with(test="test")
 
 
 def test_class_method_update(mocker):
@@ -150,35 +141,3 @@ def test_class_method_delete(mocker):
     assert BaseModel.delete(1) == []
     mocked_method.assert_called_once_with(1)
     mocked_method.return_value.orm.assert_called_once_with("delete")
-
-
-def test_class_method_dump(mocker):
-    mocked_get = mocker.patch.object(BaseModel, "get")
-    mocked_schema = mocker.patch.object(BaseModel, "schema")
-    mocked_schema.return_value.dump.return_value = []
-
-    assert BaseModel.dump(1) == []
-    mocked_schema.assert_called_once()
-    mocked_get.assert_called_once_with(1)
-    mocked_schema.return_value.dump.assert_called_once_with(mocked_get.return_value)
-
-
-def test_class_method_dump_all(mocker):
-    mocked_method = mocker.patch.object(BaseModel, "get_all")
-    mock = MagicMock()
-    mock.self_dump.return_value = "dumped"
-    mocked_method.return_value = [mock]
-
-    assert BaseModel.dump_all() == [mock.self_dump.return_value]
-    mocked_method.assert_called_once()
-    mock.self_dump.assert_called_once()
-
-
-def test_method_self_dump(mocker):
-    mocked_schema = mocker.patch.object(BaseModel, "schema")
-    mocked_schema.return_value.dump.return_value = []
-    base = BaseModel()
-
-    assert base.self_dump() == []
-    mocked_schema.assert_called_once()
-    mocked_schema.return_value.dump.assert_called_once_with(base)

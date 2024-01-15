@@ -2,8 +2,6 @@ from pytest import fixture
 
 from src.app import application
 from src.app.models import db
-from src.app.models.roles import Role
-from src.app.models.users import User
 
 
 @fixture(autouse=True)
